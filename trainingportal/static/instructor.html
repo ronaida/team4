@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Secure Coding Dojo</title>
+
+  <script src="public/jquery/dist/jquery.min.js"></script>
+  <script src="public/angular/angular.min.js"></script>
+  <script src="jquery.min.js"></script>
+  <script src="public/angular-route/angular-route.min.js"></script>
+  <script src="public/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script src="public/highlightjs/highlight.pack.min.js"></script>
+  <script src="public/canvas-confetti/dist/confetti.browser.js"></script>
+
+
+  <script src="main-app.js"></script>
+  <script src="dataSvc.js"></script>
+
+  <script src="challengesCtrl.js"></script>
+  <script src="leaderboardCtrl.js"></script>
+  <script src="submitCodeCtrl.js"></script>
+  <script src="codeBlocksCtrl.js"></script>
+  <script src="activityCtrl.js"></script>
+  <script src="dashboardCtrl.js"></script>
+  <script src="reportCtrl.js"></script>
+  <script src="solutionCtrl.js"></script>
+  <script src="trainingModulesCtrl.js"></script>
+
+  <link href="/public/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/public/css/open-iconic-bootstrap.min.css" rel="stylesheet">
+  <link href="/public/highlightjs/styles/darkula.css" rel="stylesheet">
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css " rel="stylesheet">
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+  <script type="text/javascript" src="js/script.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js "></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js "></script>
+
+  <script>
+    window.localStorage.setItem('XSRF_TOKEN', 'iRwWz8x2DZ5VSp_1PBkm6rLkS2EQIw5xrfOxHkdDbgsM_qqvLbZoFYYDLuzoPg_l5gGOpuKfkF1PdlEVa4g25Q');
+    window.getAjaxOpts = function () {
+      var opts = {
+        headers: {
+          "xsrfToken": window.localStorage.getItem("XSRF_TOKEN")
+        }
+      }
+      return opts;
+    }
+  </script>
+  <style>
+    .maim_div {
+      background: #343a40;
+    }
+
+    .user {
+      margin-top: 50px
+    }
+
+    .btn-primary {
+      margin-left: 40%;
+    }
+
+    .nav2 {
+      background-color: darkred;
+    }
+
+    .but {
+      display: inline-block;
+      color: #fff;
+      border-color: #e5e7e8;
+      margin-right: 5px;
+    }
+
+
+    .top {
+      position: relative;
+      top: 16px;
+    }
+  </style>
+
+</head>
+
+<body onload="createUsersTable();">
+  <div ng-app="challengesApp" ng-controller="mainCtrl" class="maim_div">
+    <div class="container-fluid">
+      <nav class="navbar navbar-expand-lg sticky-top navbar-dark bg-dark">
+        <a class="navbar-brand" href="#!">Secure Coding Dojo</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
+          aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+          <ul class="navbar-nav mr-auto">
+            <li class="navbar-item" ng-class="{ active: isActive('/codeBlocks')}"><a class="nav-link"
+                href="#!codeBlocks/inputAllowListing">Code Blocks</a></li>
+            <li class="navbar-item" ng-class="{ active: isActive('/activity')}"><a class="nav-link"
+                href="#!activity">Activity</a></li>
+            <li class="navbar-item" ng-class="{ active: isActive('/dashboard')}"><a class="nav-link"
+                href="#!dashboard">Dashboard</a></li>
+          </ul>
+          <ul class="navbar-nav  justify-content-end ">
+            <li class="navbar-item"><a class="nav-link" href="" data-toggle="modal" data-target="#teamModal"> </a></li>
+            <li class="navbar-item" ng-if="user.accountId.indexOf('Local_')===0"><a class="nav-link" href=""
+                data-toggle="modal" data-target="#profileModal"></li>
+            <li class="navbar-item"><a class="nav-link"><span class="oi oi-account-logout"></span>Hello Instructor </a>
+            </li>
+            <li style="margin-top: 10%;">
+              <a href="/public/locallogin.html"> <button> Log out</button></a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+  </div>
+  </div>
+  </div>
+</body>
+<table class="table  table-dark table-striped" id="usersTable">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Name</th>
+      <th scope="col">Challenge request name</th>
+      <th scope="col">belt </th>
+      <th scope="col">Show Solution</th>
+    </tr>
+  </thead>
+</table>
+</body>
+</html>
+<script>
+  function createUsersTable() {
+    var table = document.getElementById("usersTable");
+    document.getElementById("usersTable").style.textAlign = "center";
+    var i = 1;
+    var usersFile = {};
+    var approvedUsersFile = {};
+    const requestFile = new Request('./requestSolutions.json');
+    const approvedFile = new Request('./approvedUsers.json');
+    fetch(requestFile)
+      .then(response => response.json())
+      .then(data => {
+        usersFile = data;
+        //console.log(usersFile);
+        fetch(approvedFile)
+          .then(response => response.json())
+          .then(data => {
+            approvedUsersFile = data;
+            //console.log(approvedUsersFile);
+            debugger
+            for (var j = 0; j < approvedUsersFile.approvedUsers.length; j++) {
+              for (var k = 0; k < usersFile.users.length; k++) {
+                if ((approvedUsersFile.approvedUsers[j].challengeId == usersFile.users[k].challengeRequestId) && (approvedUsersFile.approvedUsers[j].name == usersFile.users[k].name)) {
+                  usersFile.users.splice(k, 1);
+                  console.log(usersFile);
+                  break;
+                }
+              }
+            }
+            for (const user of usersFile.users) {
+              var userRow = table.insertRow(i);
+              var cell1 = userRow.insertCell(0);
+              var cell2 = userRow.insertCell(1);
+              var cell3 = userRow.insertCell(2);
+              var cell4 = userRow.insertCell(3);
+              var cell5 = userRow.insertCell(4);
+              cell1.innerHTML = i;
+              cell2.innerHTML = user.name;
+              cell3.innerHTML = user.challengeRequestName;
+              cell4.innerHTML = user.belt;
+              cell5.innerHTML = "<button id='approve' onClick='removeUserFromList()';>Approve</button>";
+              i++;
+            }
+          })
+          .catch(console.error);
+      })
+      .catch(console.error);
+  }
+
+  // Send Approved Data to Server
+  function sendJsonObj(approvedUsers) {
+    var obj = JSON.stringify(approvedUsers);
+    var url = 'http://localhost:8081';
+    var http = new XMLHttpRequest();
+    http.open('POST', url, true);
+    http.setRequestHeader('Content-type', 'application/json')
+    http.send(obj);
+  }
+
+  // Approve Users
+  function removeUserFromList() {
+    var storedDeletedRows = [];
+    var table = document.getElementById('usersTable');
+    var cells = table.getElementsByTagName('td');
+    for (var i = 0; i < cells.length; i++) {
+      // Take each cell
+      var cell = cells[i];
+      // do something on onclick event for cell
+      cell.onclick = function () {
+        // Get the row id where the cell exists
+        var rowId = this.parentNode.rowIndex;
+        //console.log(rowId);
+        var rowSelected = table.getElementsByTagName("tr")[rowId];
+        var name = rowSelected.cells[1].innerHTML;
+        var challengeName = rowSelected.cells[2].innerHTML;
+        var belt = rowSelected.cells[3].innerHTML;
+        var i = 0;
+        var usersFile = {};
+        var approvedUsersFile = {};
+        const requestFile = new Request('./requestSolutions.json');
+        const approvedFile = new Request('./approvedUsers.json');
+        fetch(requestFile)
+          .then(response => response.json())
+          .then(data => {
+            usersFile = data;
+            //console.log(usersFile);
+            fetch(approvedFile)
+              .then(response => response.json())
+              .then(data => {
+                approvedUsersFile = data;
+                //console.log(approvedUsersFile);
+                for (const user of usersFile.users) {
+                  if ((user.name == name) && (user.challengeRequestName == challengeName) && (user.belt == belt)) {
+                    var deletedRows = approvedUsersFile;
+                    deletedRows.approvedUsers.push({
+                      name: name,
+                      challengeName: challengeName,
+                      challengeId: user.challengeRequestId,
+                      belt: belt,
+                      approve: "yes"
+                    });
+                    //console.log("Deleted Rows" + JSON.stringify(deletedRows));
+                    table.getElementsByTagName("tr")[rowId].remove();
+                    sendJsonObj(deletedRows);
+                  }
+                }
+              })
+              .catch(console.error);
+          })
+          .catch(console.error);
+      }
+    }
+  }
+</script>
