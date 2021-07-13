@@ -1,0 +1,16 @@
+{
+	"Instructor": {
+		"givenName": "DR",
+		"familyName": "Instructor",
+		"passSalt": "xHGRI1hR4xGlN3oG9UXm+A==",
+		"passHash": "NTPGcMbo+Wi2XjWQffocWLDaWbD3CZYwYVcvT9oLBXX9KDnM8cv4bkO3z4pue/jA4xiS9igD104sz7Knnkk+oA==",
+		"role": "user"
+	},
+	"Mariam": {
+		"givenName": "Mariam",
+		"familyName": "Ghareeb",
+		"passSalt": "rw0ZcWPaR30tbvWP+1xokA==",
+		"passHash": "fD/cjrVxbrmWKQOr8gPHqLu9w0uPtRWgvuoDTrgFxfUot/6dqY6OTb2dGLlRDKctYn03dpsFzwT0W3lHkGw8kg==",
+		"role": "user"
+	}
+}
