@@ -1,4 +1,4 @@
-Side Note : To login as an instructor you MUST register and let the username : "Instructor" otherwise you can't have access to the Instructor page.
+Side Note : To login as an instructor you MUST login by username : "Instructor" and password : 123456789mariam@M otherwise you can't have access to the Instructor page.
 
 You need to install : 
 
